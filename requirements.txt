@@ -1,0 +1,16 @@
+# DrowsyGuard - Yêu cầu thư viện
+# Cài đặt: pip install -r requirements.txt
+
+# Framework giao diện
+kivy>=2.1.0
+
+# Xử lý ảnh và video
+opencv-python>=4.5.0
+opencv-contrib-python>=4.5.0
+
+# Nhận diện khuôn mặt
+mediapipe>=0.8.0
+
+# Tính toán khoa học
+numpy>=1.19.0
+scipy>=1.5.0
