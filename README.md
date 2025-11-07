@@ -2,16 +2,16 @@
 
 Ứng dụng phát hiện và cảnh báo trạng thái buồn ngủ khi lái xe bằng công nghệ nhận diện khuôn mặt và phân tích hành vi.
 
-## 🌟 Tính năng
+## Tính năng
 
-- ✅ Nhận diện khuôn mặt theo thời gian thực
-- 👁️ Phát hiện mắt nhắm bằng chỉ số EAR (Eye Aspect Ratio)
-- 🥱 Phát hiện ngáp bằng chỉ số MAR (Mouth Aspect Ratio)
-- 🧠 Thuật toán thông minh đánh giá trạng thái buồn ngủ
-- 🔊 Cảnh báo âm thanh khi phát hiện buồn ngủ
-- 📊 Hiển thị chi tiết các chỉ số EAR, MAR và điểm buồn ngủ
+- Nhận diện khuôn mặt theo thời gian thực
+- Phát hiện mắt nhắm bằng chỉ số EAR (Eye Aspect Ratio)
+- Phát hiện ngáp bằng chỉ số MAR (Mouth Aspect Ratio)
+- Thuật toán thông minh đánh giá trạng thái buồn ngủ
+- Cảnh báo âm thanh khi phát hiện buồn ngủ
+- Hiển thị chi tiết các chỉ số EAR, MAR và điểm buồn ngủ
 
-## 📁 Cấu trúc Module
+## Cấu trúc Module
 
 ```
 DrowsyGuard/
@@ -26,7 +26,7 @@ DrowsyGuard/
 └── README.md                  # Tài liệu hướng dẫn
 ```
 
-## 🔧 Cài đặt
+## Cài đặt
 
 ### Yêu cầu hệ thống
 
@@ -59,7 +59,7 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-## 🚀 Sử dụng
+## Sử dụng
 
 ### Chạy ứng dụng
 
@@ -75,7 +75,7 @@ python main.py
 4. Ứng dụng sẽ tự động phân tích và cảnh báo khi phát hiện buồn ngủ
 5. Nhấn **"Dừng"** để kết thúc giám sát
 
-## 📊 Chỉ số quan trọng
+## Chỉ số quan trọng
 
 ### EAR (Eye Aspect Ratio)
 
@@ -91,61 +91,39 @@ python main.py
 
 ### Mức cảnh báo
 
-- 🟢 **SAFE**: Tỉnh táo, không có dấu hiệu buồn ngủ
-- 🟡 **WARNING**: Có dấu hiệu mệt mỏi (ngáp nhiều lần, điểm buồn ngủ > 50)
-- 🔴 **DANGER**: Buồn ngủ nghiêm trọng (mắt nhắm quá lâu hoặc điểm buồn ngủ > 100)
+- **SAFE**: Tỉnh táo, không có dấu hiệu buồn ngủ
+- **WARNING**: Có dấu hiệu mệt mỏi (ngáp nhiều lần, điểm buồn ngủ > 50)
+- **DANGER**: Buồn ngủ nghiêm trọng (mắt nhắm quá lâu hoặc điểm buồn ngủ > 100)
 
-## 🛠️ Chi tiết Module
+## Chi tiết Module
 
 ### 1. face_detector.py
 
-Sử dụng Mediapipe Face Mesh để:
-
-- Phát hiện khuôn mặt trong video
+- Sử dụng Mediapipe Face Mesh để phát hiện khuôn mặt trong video
 - Trích xuất 468 điểm landmark trên khuôn mặt
 - Lấy tọa độ các điểm quan trọng: mắt trái, mắt phải, miệng
 
 ### 2. ear_calculator.py
 
-Tính toán Eye Aspect Ratio:
-
-- So sánh khoảng cách dọc và ngang của mắt
-- Xác định trạng thái mắt mở/nhắm
+- Tính toán Eye Aspect Ratio (EAR) để xác định trạng thái mắt mở/nhắm
 
 ### 3. mar_calculator.py
 
-Tính toán Mouth Aspect Ratio:
-
-- Đo độ mở miệng theo chiều dọc và ngang
-- Phát hiện hành vi ngáp
+- Tính toán Mouth Aspect Ratio (MAR) để phát hiện hành vi ngáp
 
 ### 4. drowsiness_detector.py
 
-Thuật toán phát hiện buồn ngủ:
-
-- Đếm số frame mắt nhắm liên tục
-- Đếm số lần ngáp
-- Tính điểm buồn ngủ tích lũy
-- Đưa ra mức độ cảnh báo (SAFE/WARNING/DANGER)
+- Thuật toán phát hiện buồn ngủ dựa trên số frame mắt nhắm liên tục, số lần ngáp và điểm buồn ngủ tích lũy
 
 ### 5. camera_processor.py
 
-Xử lý video:
-
-- Đọc frame từ camera
-- Kết hợp các module để phân tích
-- Vẽ thông tin lên frame
+- Xử lý video từ camera, kết hợp các module để phân tích và vẽ thông tin lên frame
 
 ### 6. gui.py
 
-Giao diện Kivy:
+- Giao diện người dùng sử dụng Kivy, hiển thị video real-time, trạng thái và các chỉ số, cùng các nút điều khiển
 
-- Hiển thị video real-time
-- Hiển thị trạng thái và các chỉ số
-- Nút điều khiển (Bắt đầu/Dừng)
-- Phát âm thanh cảnh báo
-
-## 🎵 Âm thanh cảnh báo (Tùy chọn)
+## Âm thanh cảnh báo (Tùy chọn)
 
 Để kích hoạt âm thanh cảnh báo, đặt file `alarm.wav` hoặc `alarm.mp3` vào thư mục gốc.
 
@@ -166,7 +144,7 @@ audio = 0.5 * np.sin(2 * np.pi * frequency * t)
 sf.write('alarm.wav', audio, fs)
 ```
 
-## 🧪 Kiểm thử
+## Kiểm thử
 
 Chạy các module riêng lẻ để kiểm thử:
 
@@ -181,15 +159,15 @@ python -c "from ear_calculator import EARCalculator; print(EARCalculator.calcula
 python -c "from mar_calculator import MARCalculator; print(MARCalculator.calculate_mar([(0,0), (0,5), (0,7), (0,8), (15,0), (0,-8), (0,-7), (0,-5)]))"
 ```
 
-## ⚠️ Lưu ý
+## Lưu ý
 
-- Ứng dụng chỉ mang tính chất hỗ trợ, KHÔNG thay thế việc nghỉ ngơi đầy đủ
+- Ứng dụng chỉ mang tính chất hỗ trợ, không thay thế việc nghỉ ngơi đầy đủ
 - Cần có đủ ánh sáng để camera hoạt động tốt
 - Khuôn mặt cần hiện rõ, không bị che khuất
 - Không đeo kính râm khi sử dụng
 - Nên nghỉ ngơi sau mỗi 2 giờ lái xe
 
-## 🤝 Đóng góp
+## Đóng góp
 
 Mọi đóng góp đều được hoan nghênh! Vui lòng:
 
@@ -199,21 +177,21 @@ Mọi đóng góp đều được hoan nghênh! Vui lòng:
 4. Push to branch (`git push origin feature/AmazingFeature`)
 5. Tạo Pull Request
 
-## 📄 License
+## License
 
 Dự án này được phát hành theo giấy phép MIT. Xem file `LICENSE` để biết thêm chi tiết.
 
-## 📞 Liên hệ
+## Liên hệ
 
 - GitHub: [@TuanN05](https://github.com/TuanN05)
 - Email: your.email@example.com
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
-- [Mediapipe](https://mediapipe.dev/) - Face detection library
-- [Kivy](https://kivy.org/) - Python UI framework
-- [OpenCV](https://opencv.org/) - Computer vision library
+- Mediapipe - Face detection library
+- Kivy - Python UI framework
+- OpenCV - Computer vision library
 
 ---
 
-**Lái xe an toàn! 🚗💨**
+**Lái xe an toàn!**
