@@ -195,14 +195,14 @@ class DrowsyGuardLayout(BoxLayout):
             if avg_ear < 0.25:  # Mắt nhắm
                 self.eye_closed_frames += 1
                 cv2.putText(frame, "Canh bao: Mat nham!", (10, 30),
-                           cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
                 
                 if self.eye_closed_frames >= self.ALARM_THRESHOLD:
                     # CẢNH BÁO BUỒN NGỦ!
                     self.status_label.text = '⚠️ CẢNH BÁO: BUỒN NGỦ!'
                     self.status_label.color = (1, 0, 0, 1)
                     cv2.putText(frame, ">>> BUON NGU! <<<", (10, 70),
-                               cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 3)
+                                cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 3)
                     
                     # Phát âm thanh (nếu có)
                     if self.alarm_sound:
@@ -212,18 +212,18 @@ class DrowsyGuardLayout(BoxLayout):
                 self.status_label.text = '✅ Trạng thái: Tỉnh táo'
                 self.status_label.color = (0, 1, 0, 1)
                 cv2.putText(frame, "Tinh tao", (10, 30),
-                           cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
             
             # Hiển thị EAR
             cv2.putText(frame, f"EAR: {avg_ear:.2f}", (w - 150, 30),
-                       cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
         
         else:
             # Không phát hiện khuôn mặt
             self.status_label.text = '⚠️ Không phát hiện khuôn mặt'
             self.status_label.color = (1, 1, 0, 1)
             cv2.putText(frame, "Khong phat hien khuon mat", (10, 30),
-                       cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 255), 2)
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 255), 2)
         
         # Chuyển frame sang texture để hiển thị
         buf = cv2.flip(frame, 0).tobytes()

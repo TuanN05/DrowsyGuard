@@ -31,7 +31,7 @@ class MARCalculator:
         
         Args:
             mouth_landmarks: List các tọa độ (x, y) của 8 điểm landmark miệng
-                           Thứ tự: [góc_trái, trên1, trên2, trên3, dưới1, dưới2, dưới3, góc_phải]
+                            Thứ tự: [góc_trái, trên1, trên2, trên3, dưới1, dưới2, dưới3, góc_phải]
         
         Returns:
             float: Giá trị MAR (thường trong khoảng 0.3 - 1.0)

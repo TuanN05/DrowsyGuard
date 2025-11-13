@@ -30,7 +30,7 @@ class EARCalculator:
         
         Args:
             eye_landmarks: List các tọa độ (x, y) của 6 điểm landmark mắt
-                          Thứ tự: [góc_ngoài, trên1, trên2, góc_trong, dưới1, dưới2]
+                            Thứ tự: [góc_ngoài, trên1, trên2, góc_trong, dưới1, dưới2]
         
         Returns:
             float: Giá trị EAR (thường trong khoảng 0.15 - 0.35)

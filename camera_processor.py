@@ -101,7 +101,7 @@ class CameraProcessor:
             
             # Vẽ landmarks lên frame
             self.face_detector.draw_landmarks(frame, landmarks, 
-                                             draw_eyes=True, draw_mouth=True)
+                                            draw_eyes=True, draw_mouth=True)
             
             # Vẽ thông tin lên frame
             self._draw_info_on_frame(frame, status)
@@ -147,20 +147,20 @@ class CameraProcessor:
         
         # Vẽ text trạng thái
         cv2.putText(frame, text, (10, 30),
-                   cv2.FONT_HERSHEY_SIMPLEX, 0.7, color, 2)
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.7, color, 2)
         
         # Vẽ thông tin EAR
         cv2.putText(frame, f"EAR: {status['ear']:.2f}", (w - 150, 30),
-                   cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
         
         # Vẽ thông tin MAR
         cv2.putText(frame, f"MAR: {status['mar']:.2f}", (w - 150, 60),
-                   cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
         
         # Vẽ số lần ngáp
         if status['total_yawns'] > 0:
             cv2.putText(frame, f"Ngap: {status['total_yawns']}", (w - 150, 90),
-                       cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 0), 2)
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 0), 2)
         
         # Vẽ thanh điểm buồn ngủ
         score_percentage = min(100, (status['drowsiness_score'] / 
@@ -178,12 +178,12 @@ class CameraProcessor:
         cv2.rectangle(frame, (20, h - 40), (20 + bar_width, h - 20), bar_color, -1)
         cv2.rectangle(frame, (20, h - 40), (w - 20, h - 20), (255, 255, 255), 2)
         cv2.putText(frame, f"Buon ngu: {int(score_percentage)}%", (25, h - 45),
-                   cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
         
         # Vẽ cảnh báo lớn nếu ở mức DANGER
         if status['alert_level'] == 'DANGER':
             cv2.putText(frame, ">>> BUON NGU! <<<", (10, 70),
-                       cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 3)
+                        cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 3)
     
     def _draw_no_face_warning(self, frame):
         """
@@ -193,7 +193,7 @@ class CameraProcessor:
             frame: Frame ảnh
         """
         cv2.putText(frame, "Khong phat hien khuon mat", (10, 30),
-                   cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 255), 2)
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 255), 2)
     
     def get_current_status(self):
         """

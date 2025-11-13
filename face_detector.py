@@ -42,8 +42,8 @@ class FaceDetector:
             
         Returns:
             tuple: (face_detected, landmarks_dict) 
-                   face_detected: True nếu phát hiện khuôn mặt
-                   landmarks_dict: Dictionary chứa tọa độ các điểm landmark
+                    face_detected: True nếu phát hiện khuôn mặt
+                    landmarks_dict: Dictionary chứa tọa độ các điểm landmark
         """
         # Chuyển BGR sang RGB
         rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -95,15 +95,15 @@ class FaceDetector:
         if draw_eyes:
             # Vẽ viền mắt trái
             cv2.polylines(frame, [np.array(landmarks_dict['left_eye'])], 
-                         True, (0, 255, 0), 1)
+                            True, (0, 255, 0), 1)
             # Vẽ viền mắt phải
             cv2.polylines(frame, [np.array(landmarks_dict['right_eye'])], 
-                         True, (0, 255, 0), 1)
+                            True, (0, 255, 0), 1)
         
         if draw_mouth:
             # Vẽ viền miệng
             cv2.polylines(frame, [np.array(landmarks_dict['mouth'])], 
-                         True, (255, 0, 0), 1)
+                            True, (255, 0, 0), 1)
         
         return frame
     
