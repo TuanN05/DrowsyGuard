@@ -3,7 +3,6 @@ DrowsyGuard - Ứng dụng phát hiện buồn ngủ khi lái xe
 Phiên bản: 2.0 (Modular)
 Yêu cầu: Python 3.8+, Kivy, OpenCV, Mediapipe, SciPy
 
-Tác giả: DrowsyGuard Team
 Mô tả: 
     Ứng dụng sử dụng camera để phát hiện dấu hiệu buồn ngủ thông qua:
     - Eye Aspect Ratio (EAR): Phát hiện mắt nhắm
