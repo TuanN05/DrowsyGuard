@@ -51,18 +51,35 @@ class DrowsyGuardLayout(BoxLayout):
         """Xây dựng giao diện người dùng"""
 
         # === TIÊU ĐỀ ===
+        title_layout = BoxLayout(orientation='horizontal', size_hint=(1, 0.08), padding=[10, 5])
         title = Label(
-            text='DrowsyGuard - Cảnh báo buồn ngủ',
-            font_size='32sp',
+            text='DrowsyGuard',
+            font_size='36sp',
             bold=True,
-            size_hint=(1, 0.1),
-            color=(0.2, 0.6, 1, 1)
+            color=(0.2, 0.7, 1, 1),
+            halign='left',
+            valign='middle'
         )
-        self.add_widget(title)
+        title.bind(size=title.setter('text_size'))
+        
+        subtitle = Label(
+            text='Hệ thống cảnh báo buồn ngủ thông minh',
+            font_size='14sp',
+            color=(0.6, 0.6, 0.6, 1),
+            halign='right',
+            valign='middle'
+        )
+        subtitle.bind(size=subtitle.setter('text_size'))
+        
+        title_layout.add_widget(title)
+        title_layout.add_widget(subtitle)
+        self.add_widget(title_layout)
 
         # === MÀN HÌNH CAMERA ===
-        self.img_widget = Image(size_hint=(1, 0.6))
-        self.add_widget(self.img_widget)
+        camera_container = BoxLayout(orientation='vertical', size_hint=(1, 0.55), padding=5)
+        self.img_widget = Image()
+        camera_container.add_widget(self.img_widget)
+        self.add_widget(camera_container)
 
         # === THÔNG TIN TRẠNG THÁI ===
         info_layout = BoxLayout(orientation='vertical', size_hint=(1, 0.15), spacing=5)
@@ -87,20 +104,20 @@ class DrowsyGuardLayout(BoxLayout):
         self.add_widget(info_layout)
 
         # === NÚT ĐIỀU KHIỂN ===
-        btn_layout = BoxLayout(size_hint=(1, 0.1), spacing=10)
+        btn_layout = BoxLayout(size_hint=(1, 0.12), spacing=8, padding=[5, 5])
 
         self.start_btn = Button(
-            text='Bắt đầu giám sát',
-            background_color=(0.2, 0.8, 0.2, 1),
-            font_size='18sp',
+            text='Bắt đầu',
+            background_color=(0.2, 0.75, 0.3, 1),
+            font_size='17sp',
             bold=True
         )
         self.start_btn.bind(on_press=self.start_monitoring)
 
         self.stop_btn = Button(
             text='Dừng',
-            background_color=(0.8, 0.2, 0.2, 1),
-            font_size='18sp',
+            background_color=(0.85, 0.25, 0.25, 1),
+            font_size='17sp',
             bold=True,
             disabled=True
         )
@@ -109,25 +126,25 @@ class DrowsyGuardLayout(BoxLayout):
         # Nút Mặc định
         self.default_btn = Button(
             text='Mặc định',
-            background_color=(0.2, 0.4, 0.9, 1),
-            font_size='18sp',
+            background_color=(0.3, 0.5, 0.85, 1),
+            font_size='17sp',
             bold=True
         )
         self.default_btn.bind(on_press=self.reset_defaults)
 
         # Nút Tùy chỉnh độ nhạy
         self.sensitivity_btn = Button(
-            text='Tùy chỉnh độ nhạy',
-            background_color=(0.9, 0.6, 0.2, 1),
-            font_size='18sp',
+            text='Tùy chỉnh',
+            background_color=(0.85, 0.55, 0.2, 1),
+            font_size='17sp',
             bold=True
         )
         self.sensitivity_btn.bind(on_press=self.open_sensitivity_popup)
         
         self.calibrate_btn = Button(
-            text=' Hiệu chỉnh tự động',
-            background_color=(0.9, 0.6, 0.2, 1),
-            font_size='18sp',
+            text='Hiệu chỉnh',
+            background_color=(0.7, 0.35, 0.85, 1),
+            font_size='17sp',
             bold=True
         )
         self.calibrate_btn.bind(on_press=self.start_calibration)
@@ -144,10 +161,11 @@ class DrowsyGuardLayout(BoxLayout):
 
         # === HƯỚNG DẪN ===
         guide = Label(
-            text='Đặt camera sao cho khuôn mặt bạn hiện rõ. Ứng dụng sẽ cảnh báo khi phát hiện dấu hiệu buồn ngủ.',
-            font_size='14sp',
+            text='Đặt camera sao cho khuôn mặt hiện rõ. Hệ thống sẽ tự động cảnh báo khi phát hiện buồn ngủ.',
+            font_size='13sp',
             size_hint=(1, 0.05),
-            color=(0.7, 0.7, 0.7, 1)
+            color=(0.6, 0.75, 0.9, 1),
+            italic=True
         )
         self.add_widget(guide)
 
@@ -224,9 +242,9 @@ class DrowsyGuardLayout(BoxLayout):
 
         if status['alert_level'] != 'NO_FACE':
             text = (
-                f"EAR: {status['ear']:.3f} | "
-                f"MAR: {status['mar']:.3f} | "
-                f"Ngáp: {status['total_yawns']} lần | "
+                f"EAR: {status['ear']:.3f}  |  "
+                f"MAR: {status['mar']:.3f}  |  "
+                f"Ngáp: {status['total_yawns']} lần  |  "
                 f"Điểm: {status['drowsiness_score']}"
             )
         else:
@@ -235,7 +253,7 @@ class DrowsyGuardLayout(BoxLayout):
         # Luôn hiển thị ngưỡng hiện tại để bạn kiểm tra nhanh
         ear_thr = getattr(self.camera_processor.drowsiness_detector, 'EAR_THRESHOLD', 0.25)
         mar_thr = getattr(self.camera_processor.drowsiness_detector, 'MAR_THRESHOLD', 0.6)
-        text += f"\n(Độ nhạy hiện tại: EAR={ear_thr:.2f}, MAR={mar_thr:.2f})"
+        text += f"\nNgưỡng: EAR={ear_thr:.2f} | MAR={mar_thr:.2f}"
 
         self.detail_label.text = text
 
@@ -253,21 +271,21 @@ class DrowsyGuardLayout(BoxLayout):
         if self.alarm_sound and self.alarm_sound.state == 'play':
             self.alarm_sound.stop()
 
-        content = BoxLayout(orientation='vertical', padding=20, spacing=15)
-        warning_label = Label(text='⚠️', font_size='80sp', color=(1, 0, 0, 1))
-        title_label = Label(text='CẢNH BÁO BUỒN NGỦ!', font_size='28sp', bold=True, color=(1, 0, 0, 1))
-        reason_label = Label(text=status['reason'], font_size='20sp', color=(1, 1, 1, 1))
+        content = BoxLayout(orientation='vertical', padding=25, spacing=18)
+        warning_label = Label(text='!', font_size='90sp', color=(1, 0.2, 0.2, 1))
+        title_label = Label(text='CẢNH BÁO BUỒN NGỦ!', font_size='30sp', bold=True, color=(1, 0.1, 0.1, 1))
+        reason_label = Label(text=status['reason'], font_size='20sp', color=(1, 1, 1, 1), bold=True)
         action_label = Label(
-            text='Vui lòng nghỉ ngơi!\nBấm XÁC NHẬN để tiếp tục giám sát.',
-            font_size='16sp',
-            color=(1, 1, 0, 1),
+            text='Vui lòng nghỉ ngơi ngay!\nBấm XÁC NHẬN khi đã tỉnh táo',
+            font_size='17sp',
+            color=(1, 0.95, 0.3, 1),
             halign='center'
         )
         confirm_btn = Button(
             text='XÁC NHẬN - Tôi đã tỉnh táo',
-            font_size='18sp',
+            font_size='19sp',
             bold=True,
-            background_color=(0.2, 0.8, 0.2, 1)
+            background_color=(0.2, 0.75, 0.3, 1)
         )
 
         content.add_widget(warning_label)
@@ -310,10 +328,10 @@ class DrowsyGuardLayout(BoxLayout):
         try:
             self.camera_processor.drowsiness_detector.EAR_THRESHOLD = 0.25
             self.camera_processor.drowsiness_detector.MAR_THRESHOLD = 0.6
-            self.status_label.text = "Đã đặt lại EAR=0.25, MAR=0.6 về mặc định"
-            self.status_label.color = (0.4, 0.8, 1, 1)
-            self.detail_label.text = ""
-            print("✅ Reset EAR=0.25, MAR=0.6 thành công.")
+            self.status_label.text = "Đã khôi phục cài đặt mặc định"
+            self.status_label.color = (0.3, 0.8, 0.95, 1)
+            self.detail_label.text = "Ngưỡng: EAR=0.25 | MAR=0.6"
+            print("Reset EAR=0.25, MAR=0.6 thành công.")
         except Exception as e:
             print("❌ Lỗi khi đặt lại mặc định:", e)
             self.status_label.text = "❌ Lỗi khi đặt lại mặc định"
@@ -330,27 +348,27 @@ class DrowsyGuardLayout(BoxLayout):
         layout = BoxLayout(orientation='vertical', spacing=12, padding=20)
 
         # --- Slider EAR ---
-        ear_label = Label(text=f"Ngưỡng EAR hiện tại: {current_ear:.2f}", font_size='16sp')
+        ear_label = Label(text=f"Ngưỡng EAR (Mắt): {current_ear:.2f}", font_size='17sp', bold=True, color=(0.3, 0.8, 1, 1))
         ear_slider = Slider(min=0.15, max=0.35, value=current_ear, step=0.01)
-        ear_slider.bind(value=lambda s, v: ear_label.setter('text')(ear_label, f"Ngưỡng EAR hiện tại: {v:.2f}"))
+        ear_slider.bind(value=lambda s, v: ear_label.setter('text')(ear_label, f"Ngưỡng EAR (Mắt): {v:.2f}"))
 
         # --- Slider MAR ---
-        mar_label = Label(text=f"Ngưỡng MAR hiện tại: {current_mar:.2f}", font_size='16sp')
+        mar_label = Label(text=f"Ngưỡng MAR (Miệng): {current_mar:.2f}", font_size='17sp', bold=True, color=(1, 0.7, 0.3, 1))
         mar_slider = Slider(min=0.4, max=0.8, value=current_mar, step=0.01)
-        mar_slider.bind(value=lambda s, v: mar_label.setter('text')(mar_label, f"Ngưỡng MAR hiện tại: {v:.2f}"))
+        mar_slider.bind(value=lambda s, v: mar_label.setter('text')(mar_label, f"Ngưỡng MAR (Miệng): {v:.2f}"))
 
         # --- Nút Lưu ---
         save_btn = Button(
             text='Lưu cài đặt',
-            background_color=(0.2, 0.8, 0.2, 1),
-            size_hint=(1, 0.7),
+            background_color=(0.2, 0.75, 0.3, 1),
+            size_hint=(1, 0.5),
             bold=True,
             font_size='20sp'
         )
 
         # Tạo popup trước, để hàm con có thể gọi popup.dismiss()
         popup = Popup(
-            title='⚙️ Tùy chỉnh độ nhạy phát hiện',
+            title='Tùy chỉnh độ nhạy phát hiện',
             content=layout,
             size_hint=(0.9, 0.7),
             auto_dismiss=True
@@ -361,8 +379,9 @@ class DrowsyGuardLayout(BoxLayout):
             new_mar = mar_slider.value
             self.camera_processor.drowsiness_detector.EAR_THRESHOLD = new_ear
             self.camera_processor.drowsiness_detector.MAR_THRESHOLD = new_mar
-            self.status_label.text = f"✅ EAR={new_ear:.2f}, MAR={new_mar:.2f} đã được cập nhật"
-            self.status_label.color = (0.3, 1, 0.7, 1)
+            self.status_label.text = f"Đã cập nhật độ nhạy thành công"
+            self.status_label.color = (0.3, 0.9, 0.6, 1)
+            self.detail_label.text = f"Ngưỡng: EAR={new_ear:.2f} | MAR={new_mar:.2f}"
             print(f"[INFO] Ngưỡng mới áp dụng: EAR={new_ear:.2f}, MAR={new_mar:.2f}")
             popup.dismiss()
 
@@ -507,7 +526,7 @@ class DrowsyGuardLayout(BoxLayout):
         
         # Kiểm tra đủ mẫu
         if len(self.calibration_samples['ear']) < 50:
-            self.status_label.text = ' Calibration thất bại: Không đủ dữ liệu'
+            self.status_label.text = 'Calibration thất bại: Không đủ dữ liệu'
             self.status_label.color = (1, 0, 0, 1)
             self.detail_label.text = 'Vui lòng thử lại và đảm bảo khuôn mặt hiện rõ'
             return
@@ -529,14 +548,14 @@ class DrowsyGuardLayout(BoxLayout):
         self.camera_processor.drowsiness_detector.MAR_THRESHOLD = optimal_mar
         
         # Hiển thị kết quả
-        self.status_label.text = ' Hiệu chỉnh thành công!'
+        self.status_label.text = 'Hiệu chỉnh thành công!'
         self.status_label.color = (0, 1, 0, 1)
         
         self.detail_label.text = (
-            f" Kết quả Calibration:\n"
+            f"Kết quả Calibration:\n"
             f"EAR trung bình: {avg_ear:.3f} → Ngưỡng: {optimal_ear:.3f}\n"
             f"MAR trung bình: {avg_mar:.3f} → Ngưỡng: {optimal_mar:.3f}\n"
-            f" Ngưỡng đã được tối ưu hóa cho bạn!"
+            f"Ngưỡng đã được tối ưu hóa cho bạn!"
         )
         
         print(f"[CALIBRATION] EAR: {avg_ear:.3f} → {optimal_ear:.3f}")
@@ -549,19 +568,20 @@ class DrowsyGuardLayout(BoxLayout):
         """Hiển thị popup kết quả calibration"""
         content = BoxLayout(orientation='vertical', padding=20, spacing=10)
         
-        success_icon = Label(text='ok', font_size='60sp', color=(0, 1, 0, 1))
+        success_icon = Label(text='OK', font_size='30sp', color=(0, 1, 0, 1), bold=True, size_hint=(1, 0.2))
         title = Label(
             text='HIỆU CHỈNH THÀNH CÔNG!',
             font_size='24sp',
             bold=True,
-            color=(0, 1, 0, 1)
+            color=(0, 1, 0, 1),
+            size_hint=(1, 0.2)
         )
         
         result = Label(
             text=(
                 f'Đặc điểm khuôn mặt của bạn:\n'
-                f'• EAR bình thường: {avg_ear:.3f}\n'
-                f'• MAR bình thường: {avg_mar:.3f}\n\n'
+                f'EAR bình thường: {avg_ear:.3f}\n'
+                f'MAR bình thường: {avg_mar:.3f}\n\n'
                 f'Ngưỡng tối ưu:\n'
                 f'• EAR: {new_ear:.3f} (mắt nhắm)\n'
                 f'• MAR: {new_mar:.3f} (ngáp)'
@@ -575,7 +595,8 @@ class DrowsyGuardLayout(BoxLayout):
             text='HOÀN TẤT',
             background_color=(0.2, 0.8, 0.2, 1),
             size_hint=(1, 0.3),
-            bold=True
+            bold=True,
+            font_size='20sp'
         )
         
         content.add_widget(success_icon)
