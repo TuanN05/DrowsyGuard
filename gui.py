@@ -34,6 +34,12 @@ class DrowsyGuardLayout(BoxLayout):
         self.is_monitoring = False
         self.is_paused = False
         self.alert_popup = None
+        
+        # THÊM: Biến lưu trữ calibration
+        self.calibration_mode = False
+        self.calibration_samples = {'ear': [], 'mar': []}
+        self.calibration_frames = 0
+        self.CALIBRATION_DURATION = 150  # 5 giây ở 30 FPS
 
         # Tải âm thanh cảnh báo
         self.setup_alarm()
@@ -117,12 +123,21 @@ class DrowsyGuardLayout(BoxLayout):
             bold=True
         )
         self.sensitivity_btn.bind(on_press=self.open_sensitivity_popup)
+        
+        self.calibrate_btn = Button(
+            text=' Hiệu chỉnh tự động',
+            background_color=(0.9, 0.6, 0.2, 1),
+            font_size='18sp',
+            bold=True
+        )
+        self.calibrate_btn.bind(on_press=self.start_calibration)
 
         # Thêm nút vào layout (đúng thứ tự)
         btn_layout.add_widget(self.start_btn)
         btn_layout.add_widget(self.stop_btn)
         btn_layout.add_widget(self.default_btn)
         btn_layout.add_widget(self.sensitivity_btn)
+        btn_layout.add_widget(self.calibrate_btn)
 
         # Đưa layout nút lên giao diện
         self.add_widget(btn_layout)
@@ -328,8 +343,9 @@ class DrowsyGuardLayout(BoxLayout):
         save_btn = Button(
             text='Lưu cài đặt',
             background_color=(0.2, 0.8, 0.2, 1),
-            size_hint=(1, 0.3),
-            bold=True
+            size_hint=(1, 0.7),
+            bold=True,
+            font_size='20sp'
         )
 
         # Tạo popup trước, để hàm con có thể gọi popup.dismiss()
@@ -360,6 +376,220 @@ class DrowsyGuardLayout(BoxLayout):
         layout.add_widget(save_btn)
 
         popup.open()
+        
+    #=====================================
+    #=====================================
+    #=====================================
+    # Phần hiệu chỉnh tự động
+    #=====================================
+    def start_calibration(self, instance):
+        """Bắt đầu calibration tự động"""
+        if self.is_monitoring:
+            self.status_label.text = "⚠️ Vui lòng dừng giám sát trước khi calibration"
+            self.status_label.color = (1, 0.5, 0, 1)
+            return
+        
+        # Hiển thị popup hướng dẫn
+        content = BoxLayout(orientation='vertical', padding=20, spacing=15)
+        
+        instruction = Label(
+            text=(
+                'HƯỚNG DẪN HIỆU CHỈNH\n\n'
+                '1. Ngồi thẳng, nhìn thẳng vào camera\n'
+                '2. Mở mắt bình thường trong 5 giây\n'
+                '3. KHÔNG chớp mắt quá nhiều\n'
+                '4. Hệ thống sẽ tự động tính ngưỡng tối ưu'
+            ),
+            font_size='16sp',
+            halign='center',
+            color=(1, 1, 1, 1)
+        )
+        
+        start_btn = Button(
+            text='BẮT ĐẦU HIỆU CHỈNH',
+            background_color=(0.2, 0.8, 0.2, 1),
+            size_hint=(1, 0.3),
+            bold=True,
+            font_size='18sp'
+        )
+        
+        content.add_widget(instruction)
+        content.add_widget(start_btn)
+        
+        popup = Popup(
+            title='Hiệu chỉnh độ nhạy tự động',
+            content=content,
+            size_hint=(0.8, 0.6),
+            auto_dismiss=False
+        )
+        
+        def begin_calibration(instance_btn):
+            popup.dismiss()
+            self._run_calibration()
+        
+        start_btn.bind(on_press=begin_calibration)
+        popup.open()
+
+    def _run_calibration(self):
+        """Chạy quá trình calibration"""
+        self.calibration_mode = True
+        self.calibration_samples = {'ear': [], 'mar': []}
+        self.calibration_frames = 0
+        
+        # Bật camera để thu thập dữ liệu
+        if self.camera_processor.start():
+            self.status_label.text = 'Đang hiệu chỉnh... Giữ mắt mở và nhìn thẳng!'
+            self.status_label.color = (1, 1, 0, 1)
+            
+            # Disable các nút trong lúc calibration
+            self.start_btn.disabled = True
+            self.calibrate_btn.disabled = True
+            self.default_btn.disabled = True
+            
+            Clock.schedule_interval(self._calibration_update, 1.0 / 30.0)
+        else:
+            self.status_label.text = 'Lỗi: Không thể mở camera'
+            self.status_label.color = (1, 0, 0, 1)
+            self.calibration_mode = False
+
+    def _calibration_update(self, dt):
+        """Cập nhật frame trong quá trình calibration"""
+        if not self.calibration_mode:
+            return False  # Dừng schedule
+        
+        success, frame, status = self.camera_processor.process_frame()
+        
+        if not success or frame is None or not status:
+            return True  # Tiếp tục thử
+        
+        # Hiển thị frame
+        self._display_frame(frame)
+        
+        # Thu thập mẫu EAR/MAR (chỉ khi phát hiện khuôn mặt)
+        if status['alert_level'] != 'NO_FACE':
+            self.calibration_samples['ear'].append(status['ear'])
+            self.calibration_samples['mar'].append(status['mar'])
+            self.calibration_frames += 1
+            
+            # Hiển thị tiến trình
+            progress = int((self.calibration_frames / self.CALIBRATION_DURATION) * 100)
+            self.detail_label.text = (
+                f"Tiến trình: {progress}% ({self.calibration_frames}/{self.CALIBRATION_DURATION})\n"
+                f"EAR hiện tại: {status['ear']:.3f} | MAR: {status['mar']:.3f}"
+            )
+        else:
+            self.detail_label.text = "Không phát hiện khuôn mặt - Vui lòng nhìn thẳng vào camera"
+        
+        # Hoàn thành calibration
+        if self.calibration_frames >= self.CALIBRATION_DURATION:
+            self._finish_calibration()
+            return False  # Dừng schedule
+        
+        return True  # Tiếp tục
+
+    def _finish_calibration(self):
+        """Hoàn thành calibration và tính ngưỡng"""
+        self.calibration_mode = False
+        self.camera_processor.stop()
+        
+        # Enable lại các nút
+        self.start_btn.disabled = False
+        self.calibrate_btn.disabled = False
+        self.default_btn.disabled = False
+        
+        # Kiểm tra đủ mẫu
+        if len(self.calibration_samples['ear']) < 50:
+            self.status_label.text = ' Calibration thất bại: Không đủ dữ liệu'
+            self.status_label.color = (1, 0, 0, 1)
+            self.detail_label.text = 'Vui lòng thử lại và đảm bảo khuôn mặt hiện rõ'
+            return
+        
+        # Tính EAR/MAR trung bình
+        avg_ear = sum(self.calibration_samples['ear']) / len(self.calibration_samples['ear'])
+        avg_mar = sum(self.calibration_samples['mar']) / len(self.calibration_samples['mar'])
+        
+        # Tính ngưỡng tối ưu (giảm 20% cho EAR, tăng 20% cho MAR)
+        optimal_ear = avg_ear * 0.80  # Mắt nhắm khi EAR giảm 20%
+        optimal_mar = avg_mar * 1.20  # Ngáp khi MAR tăng 20%
+        
+        # Giới hạn trong khoảng hợp lý
+        optimal_ear = max(0.15, min(0.30, optimal_ear))
+        optimal_mar = max(0.50, min(0.75, optimal_mar))
+        
+        # Áp dụng ngưỡng mới
+        self.camera_processor.drowsiness_detector.EAR_THRESHOLD = optimal_ear
+        self.camera_processor.drowsiness_detector.MAR_THRESHOLD = optimal_mar
+        
+        # Hiển thị kết quả
+        self.status_label.text = ' Hiệu chỉnh thành công!'
+        self.status_label.color = (0, 1, 0, 1)
+        
+        self.detail_label.text = (
+            f" Kết quả Calibration:\n"
+            f"EAR trung bình: {avg_ear:.3f} → Ngưỡng: {optimal_ear:.3f}\n"
+            f"MAR trung bình: {avg_mar:.3f} → Ngưỡng: {optimal_mar:.3f}\n"
+            f" Ngưỡng đã được tối ưu hóa cho bạn!"
+        )
+        
+        print(f"[CALIBRATION] EAR: {avg_ear:.3f} → {optimal_ear:.3f}")
+        print(f"[CALIBRATION] MAR: {avg_mar:.3f} → {optimal_mar:.3f}")
+        
+        # Hiển thị popup thành công
+        self._show_calibration_success(avg_ear, avg_mar, optimal_ear, optimal_mar)
+
+    def _show_calibration_success(self, avg_ear, avg_mar, new_ear, new_mar):
+        """Hiển thị popup kết quả calibration"""
+        content = BoxLayout(orientation='vertical', padding=20, spacing=10)
+        
+        success_icon = Label(text='ok', font_size='60sp', color=(0, 1, 0, 1))
+        title = Label(
+            text='HIỆU CHỈNH THÀNH CÔNG!',
+            font_size='24sp',
+            bold=True,
+            color=(0, 1, 0, 1)
+        )
+        
+        result = Label(
+            text=(
+                f'Đặc điểm khuôn mặt của bạn:\n'
+                f'• EAR bình thường: {avg_ear:.3f}\n'
+                f'• MAR bình thường: {avg_mar:.3f}\n\n'
+                f'Ngưỡng tối ưu:\n'
+                f'• EAR: {new_ear:.3f} (mắt nhắm)\n'
+                f'• MAR: {new_mar:.3f} (ngáp)'
+            ),
+            font_size='16sp',
+            halign='center',
+            color=(1, 1, 1, 1)
+        )
+        
+        ok_btn = Button(
+            text='HOÀN TẤT',
+            background_color=(0.2, 0.8, 0.2, 1),
+            size_hint=(1, 0.3),
+            bold=True
+        )
+        
+        content.add_widget(success_icon)
+        content.add_widget(title)
+        content.add_widget(result)
+        content.add_widget(ok_btn)
+        
+        popup = Popup(
+            title='',
+            content=content,
+            size_hint=(0.8, 0.7),
+            auto_dismiss=False,
+            separator_height=0
+        )
+        
+        ok_btn.bind(on_press=popup.dismiss)
+        popup.open()
+        
+        #=====================================
+        #=====================================
+        #=====================================
+        #=====================================
 
     def on_stop(self):
         """Cleanup khi đóng ứng dụng"""
