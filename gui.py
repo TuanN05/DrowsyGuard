@@ -342,8 +342,12 @@ class DrowsyGuardLayout(BoxLayout):
         Mở popup cho phép người dùng tùy chỉnh độ nhạy (EAR, MAR)
         """
         # Lấy giá trị hiện tại
-        current_ear = getattr(self.camera_processor.drowsiness_detector, 'EAR_THRESHOLD', 0.25)
-        current_mar = getattr(self.camera_processor.drowsiness_detector, 'MAR_THRESHOLD', 0.6)
+        current_ear = (getattr(self.camera_processor.drowsiness_detector, 'EAR_THRESHOLD', 0.25))
+        current_mar = (getattr(self.camera_processor.drowsiness_detector, 'MAR_THRESHOLD', 0.6))
+        
+        # lam tron va ep kieu float de kivy nhan dung
+        current_ear = float(round(current_ear, 3))
+        current_mar = float(round(current_mar, 3))
 
         layout = BoxLayout(orientation='vertical', spacing=12, padding=20)
 
@@ -472,7 +476,7 @@ class DrowsyGuardLayout(BoxLayout):
             self.start_btn.disabled = True
             self.calibrate_btn.disabled = True
             self.default_btn.disabled = True
-            
+            # hàm calibrate_update sẽ được gọi 30 lần mỗi giây
             Clock.schedule_interval(self._calibration_update, 1.0 / 30.0)
         else:
             self.status_label.text = 'Lỗi: Không thể mở camera'
@@ -519,10 +523,7 @@ class DrowsyGuardLayout(BoxLayout):
         self.calibration_mode = False
         self.camera_processor.stop()
         
-        # Enable lại các nút
-        self.start_btn.disabled = False
-        self.calibrate_btn.disabled = False
-        self.default_btn.disabled = False
+        
         
         # Kiểm tra đủ mẫu
         if len(self.calibration_samples['ear']) < 50:
@@ -611,6 +612,11 @@ class DrowsyGuardLayout(BoxLayout):
             auto_dismiss=False,
             separator_height=0
         )
+        
+        # Enable lại các nút
+        self.start_btn.disabled = False
+        self.calibrate_btn.disabled = False
+        self.default_btn.disabled = False
         
         ok_btn.bind(on_press=popup.dismiss)
         popup.open()
