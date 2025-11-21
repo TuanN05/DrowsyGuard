@@ -65,11 +65,11 @@ class DrowsinessDetector:
         
         if eyes_closed:
             self.eye_closed_frames += 1
-            self.drowsiness_score += 2  # Mỗi frame mắt nhắm +2 điểm
+            self.drowsiness_score += 1  # Mỗi frame mắt nhắm +1 điểm
         else:
             self.eye_closed_frames = 0
             # Giảm dần điểm buồn ngủ khi mắt mở
-            self.drowsiness_score = max(0, self.drowsiness_score - 1)
+            self.drowsiness_score = max(0, self.drowsiness_score - 0.5)
         
         # Kiểm tra ngáp
         is_yawning = MARCalculator.is_yawning(mar_value)
@@ -80,7 +80,7 @@ class DrowsinessDetector:
                 # Đếm một lần ngáp khi đủ số frame
                 if self.yawn_frames == self.YAWN_FRAMES_THRESHOLD:
                     self.total_yawns += 1
-                    self.drowsiness_score += 10  # Mỗi lần ngáp +10 điểm
+                    self.drowsiness_score += 5  # Mỗi lần ngáp +5 điểm
         else:
             self.yawn_frames = 0
         
