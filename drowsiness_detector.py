@@ -159,11 +159,11 @@ class DrowsinessDetector:
             str: Text hiển thị trạng thái
         """
         if status['alert_level'] == 'DANGER':
-            return f"⚠️ CẢNH BÁO: {status['reason']}"
+            return f" CẢNH BÁO: {status['reason']}"
         elif status['alert_level'] == 'WARNING':
-            return f"⚡ CHÚ Ý: {status['reason']}"
+            return f" CHÚ Ý: {status['reason']}"
         else:
-            return f"✅ {status['reason']}"
+            return f" {status['reason']}"
     
     def get_status_color(self, status):
         """
