@@ -245,7 +245,7 @@ class DrowsyGuardLayout(BoxLayout):
                 f"EAR: {status['ear']:.3f}  |  "
                 f"MAR: {status['mar']:.3f}  |  "
                 f"Ngáp: {status['total_yawns']} lần  |  "
-                f"Điểm: {status['drowsiness_score']}"
+                f"Điểm: {round(status['drowsiness_score'], 2)}"
             )
         else:
             text = 'Vui lòng đưa khuôn mặt vào khung hình'

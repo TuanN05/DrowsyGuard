@@ -13,16 +13,16 @@ class DrowsinessDetector:
     """
     
     # Ngưỡng số frame mắt nhắm liên tục để cảnh báo buồn ngủ
-    EYE_CLOSED_FRAMES_THRESHOLD = 20  # ~0.67 giây ở 30 FPS
+    EYE_CLOSED_FRAMES_THRESHOLD = 90  # ~3 giây ở 30 FPS - mắt nhắm thực sự lâu
     
     # Ngưỡng số frame ngáp để cảnh báo
-    YAWN_FRAMES_THRESHOLD = 15  # ~0.5 giây ở 30 FPS
+    YAWN_FRAMES_THRESHOLD = 30  # ~1 giây ở 30 FPS - ngáp thực sự
     
-    # Ngưỡng số lần ngáp để cảnh báo nghiêm trọng (giảm từ 3 xuống 2)
-    YAWN_COUNT_THRESHOLD = 2
+    # Ngưỡng số lần ngáp để cảnh báo nghiêm trọng
+    YAWN_COUNT_THRESHOLD = 4  # Phải ngáp 4 lần mới cảnh báo
     
     # Điểm buồn ngủ tích lũy
-    DROWSINESS_SCORE_THRESHOLD = 100
+    DROWSINESS_SCORE_THRESHOLD = 200  # Tăng ngưỡng để ít nhạy hơn
     
     def __init__(self):
         """Khởi tạo Drowsiness Detector"""
@@ -85,11 +85,11 @@ class DrowsinessDetector:
         
         if eyes_closed:
             self.eye_closed_frames += 1
-            self.drowsiness_score += 1  # Mỗi frame mắt nhắm +1 điểm
+            self.drowsiness_score += 0.5  # Mỗi frame mắt nhắm +0.5 điểm (chậm hơn)
         else:
             self.eye_closed_frames = 0
-            # Giảm dần điểm buồn ngủ khi mắt mở
-            self.drowsiness_score = max(0, self.drowsiness_score - 0.5)
+            # Giảm dần điểm buồn ngủ khi mắt mở (chậm hơn)
+            self.drowsiness_score = max(0, self.drowsiness_score - 0.3)
         
         # Kiểm tra ngáp
         is_yawning = MARCalculator.is_yawning(mar_value)
@@ -100,7 +100,7 @@ class DrowsinessDetector:
                 # Đếm một lần ngáp khi đủ số frame
                 if self.yawn_frames == self.YAWN_FRAMES_THRESHOLD:
                     self.total_yawns += 1
-                    self.drowsiness_score += 5  # Mỗi lần ngáp +5 điểm
+                    self.drowsiness_score += 3  # Mỗi lần ngáp +3 điểm (ít hơn)
         else:
             self.yawn_frames = 0
         
