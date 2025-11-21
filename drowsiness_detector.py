@@ -31,6 +31,7 @@ class DrowsinessDetector:
         self.drowsiness_score = 0
         self.total_yawns = 0
         self.alert_active = False
+        self.pause_scoring_frames = -90  # Số frame còn lại cần tạm dừng tính điểm
     
     def reset(self):
         """Reset tất cả các biến đếm"""
@@ -39,6 +40,8 @@ class DrowsinessDetector:
         self.drowsiness_score = 0
         self.total_yawns = 0
         self.alert_active = False
+        # đặt thời gian tạm dừng, cứ 30 frame là 1 giây
+        self.pause_scoring_frames = 90
     
     def update(self, ear_value, mar_value):
         """
@@ -60,6 +63,23 @@ class DrowsinessDetector:
                     'total_yawns': int - Tổng số lần ngáp
                 }
         """
+        # Kiểm tra nếu đang trong thời gian tạm dừng tính điểm
+        if self.pause_scoring_frames > 0:
+            self.pause_scoring_frames -= 1
+            # Vẫn cập nhật giá trị nhưng không tính điểm
+            return {
+                'drowsy': False,
+                'alert_level': 'SAFE',
+                'reason': f'Đã xác nhận tỉnh táo ({self.pause_scoring_frames // 30 + 1}s)',
+                'ear': ear_value,
+                'mar': mar_value,
+                'eye_closed_frames': 0,
+                'yawn_frames': 0,
+                'total_yawns': self.total_yawns,
+                'drowsiness_score': 0,
+                'alert_active': False
+            }
+        
         # Kiểm tra mắt nhắm
         eyes_closed = EARCalculator.is_eyes_closed(ear_value)
         
