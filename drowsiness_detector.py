@@ -70,7 +70,7 @@ class DrowsinessDetector:
             return {
                 'drowsy': False,
                 'alert_level': 'SAFE',
-                'reason': f'Đã xác nhận tỉnh táo ({self.pause_scoring_frames // 30 + 1}s)',
+                'reason': f'Tinh tao ({self.pause_scoring_frames // 30 + 1}s)',
                 'ear': ear_value,
                 'mar': mar_value,
                 'eye_closed_frames': 0,
@@ -106,7 +106,7 @@ class DrowsinessDetector:
         
         # Xác định mức độ cảnh báo
         alert_level = 'SAFE'
-        reason = 'Tỉnh táo'
+        reason = 'Tinh tao'
         drowsy = False
         
         if self.eye_closed_frames >= self.EYE_CLOSED_FRAMES_THRESHOLD:
