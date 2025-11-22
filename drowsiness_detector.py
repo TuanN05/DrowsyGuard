@@ -16,7 +16,7 @@ class DrowsinessDetector:
     EYE_CLOSED_FRAMES_THRESHOLD = 90  # ~3 giây ở 30 FPS - mắt nhắm thực sự lâu
     
     # Ngưỡng số frame ngáp để cảnh báo
-    YAWN_FRAMES_THRESHOLD = 30  # ~1 giây ở 30 FPS - ngáp thực sự
+    YAWN_FRAMES_THRESHOLD = 60  # ~2 giây ở 30 FPS - ngáp thực sự phải kéo dài 2s
     
     # Ngưỡng số lần ngáp để cảnh báo nghiêm trọng
     YAWN_COUNT_THRESHOLD = 4  # Phải ngáp 4 lần mới cảnh báo
@@ -105,7 +105,7 @@ class DrowsinessDetector:
                 # Đếm một lần ngáp khi đủ số frame
                 if self.yawn_frames == self.YAWN_FRAMES_THRESHOLD:
                     self.total_yawns += 1
-                    self.drowsiness_score += 3  # Mỗi lần ngáp +3 điểm (ít hơn)
+                    self.drowsiness_score += 50  # Mỗi lần ngáp +50 điểm
                     self.frames_since_last_yawn = 0  # Reset bộ đếm thời gian
         else:
             self.yawn_frames = 0
@@ -139,13 +139,13 @@ class DrowsinessDetector:
         elif self.drowsiness_score >= self.DROWSINESS_SCORE_THRESHOLD:
             # Cảnh báo điểm buồn ngủ cao
             alert_level = 'DANGER'
-            reason = 'Dấu hiệu buồn ngủ mạnh!'
+            reason = 'Co dau hieu buon ngu manh!'
             drowsy = True
             self.alert_active = True
         elif self.drowsiness_score >= self.DROWSINESS_SCORE_THRESHOLD * 0.5:
             # Cảnh báo nhẹ
             alert_level = 'WARNING'
-            reason = 'Có dấu hiệu mệt mỏi'
+            reason = 'Co dau hieu met moi'
             drowsy = False
         else:
             self.alert_active = False

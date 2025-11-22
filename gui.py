@@ -276,7 +276,7 @@ class DrowsyGuardLayout(BoxLayout):
             self.status_label.color = (1, 1, 0, 1)
             Clock.schedule_interval(self.update, 1.0 / 30.0)
         else:
-            self.status_label.text = '❌ Lỗi: Không thể mở camera'
+            self.status_label.text = 'Lỗi: Không thể mở camera'
             self.status_label.color = (1, 0, 0, 1)
 
     def stop_monitoring(self, instance):
@@ -356,7 +356,7 @@ class DrowsyGuardLayout(BoxLayout):
         self.img_widget.texture = texture
 
     def _show_drowsiness_alert(self, status):
-        """Hiển thị popup cảnh báo buồn ngủ - Phong cách cổ điển"""
+        """Hiển thị popup cảnh báo buồn ngủ """
         self.is_paused = True
 
         if self.alarm_sound and self.alarm_sound.state == 'play':
@@ -581,7 +581,7 @@ class DrowsyGuardLayout(BoxLayout):
         #==================================================================================
 
     def start_calibration(self, instance):
-        """Bắt đầu calibration tự động - Phong cách cổ điển"""
+        """Bắt đầu calibration tự động"""
         if self.is_monitoring:
             self.status_label.text = "Vui lòng dừng giám sát trước khi hiệu chỉnh"
             self.status_label.color = (1, 0.5, 0, 1)
