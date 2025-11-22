@@ -43,10 +43,8 @@ class FaceDetector:
         """
         Phát hiện khuôn mặt trong frame
         
-        Args:
             frame: Frame ảnh BGR từ camera
             
-        Returns:
             tuple: (face_detected, landmarks_dict) 
                     face_detected: True nếu phát hiện khuôn mặt
                     landmarks_dict: Dictionary chứa tọa độ các điểm landmark

@@ -24,31 +24,17 @@ from gui import DrowsyGuardApp
 
 def main():
     """Hàm chính để chạy ứng dụng"""
-    print("=" * 60)
-    print("DrowsyGuard v2.0 - Hệ thống cảnh báo buồn ngủ")
-    print("=" * 60)
-    print("\nKhởi động ứng dụng...")
-    print("\nHướng dẫn sử dụng:")
-    print("1. Nhấn 'Bắt đầu giám sát' để bắt đầu")
-    print("2. Đảm bảo khuôn mặt bạn hiện rõ trước camera")
-    print("3. Ứng dụng sẽ phân tích và cảnh báo khi phát hiện buồn ngủ")
-    print("4. Nhấn 'Dừng' để kết thúc giám sát")
-    print("\nChỉ số quan trọng:")
-    print("- EAR < 0.25: Mắt đang nhắm")
-    print("- MAR > 0.6: Đang ngáp")
-    print("- Điểm buồn ngủ > 100: Cảnh báo nghiêm trọng")
-    print("\n" + "=" * 60 + "\n")
     
     try:
         app = DrowsyGuardApp()
         app.run()
     except KeyboardInterrupt:
-        print("\n\nỨng dụng đã dừng bởi người dùng")
+        print("\n\n Ứng dụng đã dừng bởi người dùng")
     except Exception as e:
         print(f"\n\nLỗi: {e}")
         print("Vui lòng kiểm tra:")
         print("- Camera có hoạt động không?")
-        print("- Đã cài đặt đủ thư viện chưa? (pip install -r requirements.txt)")
+        print("- Đã cài đặt đủ thư viện chưa?  (Xem file requirements.txt)")
     finally:
         print("\nĐã đóng ứng dụng. Lái xe an toàn!")
 

@@ -75,11 +75,8 @@ class MARCalculator:
     def is_yawning(mar_value):
         """
         Kiểm tra xem có đang ngáp hay không
-        
-        Args:
             mar_value: Giá trị MAR
         
-        Returns:
             bool: True nếu đang ngáp, False nếu không ngáp
         """
         return mar_value > MARCalculator.YAWN_THRESHOLD
@@ -89,10 +86,8 @@ class MARCalculator:
         """
         Lấy trạng thái miệng dưới dạng chuỗi
         
-        Args:
             mar_value: Giá trị MAR
         
-        Returns:
             str: "YAWNING" hoặc "NORMAL"
         """
         return "YAWNING" if MARCalculator.is_yawning(mar_value) else "NORMAL"

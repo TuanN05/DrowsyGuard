@@ -51,11 +51,9 @@ class EARCalculator:
         """
         Tính EAR trung bình của cả hai mắt
         
-        Args:
             left_eye_landmarks: List tọa độ 6 điểm landmark mắt trái
             right_eye_landmarks: List tọa độ 6 điểm landmark mắt phải
         
-        Returns:
             float: EAR trung bình
         """
         left_ear = EARCalculator.calculate_ear(left_eye_landmarks)
@@ -68,10 +66,8 @@ class EARCalculator:
         """
         Kiểm tra xem mắt có đang nhắm hay không
         
-        Args:
             ear_value: Giá trị EAR
         
-        Returns:
             bool: True nếu mắt đang nhắm, False nếu mắt đang mở
         """
         return ear_value < EARCalculator.EYE_CLOSED_THRESHOLD
@@ -81,10 +77,8 @@ class EARCalculator:
         """
         Lấy trạng thái mắt dưới dạng chuỗi
         
-        Args:
             ear_value: Giá trị EAR
         
-        Returns:
             str: "CLOSED" hoặc "OPEN"
         """
         return "CLOSED" if EARCalculator.is_eyes_closed(ear_value) else "OPEN"

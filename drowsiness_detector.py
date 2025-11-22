@@ -167,10 +167,8 @@ class DrowsinessDetector:
         """
         Tạo text hiển thị trạng thái chi tiết
         
-        Args:
             status: Dictionary trạng thái từ hàm update()
         
-        Returns:
             str: Text hiển thị trạng thái
         """
         if status['alert_level'] == 'DANGER':
@@ -184,10 +182,8 @@ class DrowsinessDetector:
         """
         Lấy màu sắc cho trạng thái
         
-        Args:
             status: Dictionary trạng thái từ hàm update()
         
-        Returns:
             tuple: (R, G, B, A) màu sắc
         """
         if status['alert_level'] == 'DANGER':
