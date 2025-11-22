@@ -163,7 +163,7 @@ class DrowsyGuardLayout(BoxLayout):
         row1 = BoxLayout(size_hint=(1, 0.3), spacing=8)
         
         self.start_btn = Button(
-            text='▶ Bắt đầu',
+            text='Bắt đầu',
             background_color=(0.25, 0.6, 0.25, 1),
             background_normal='',
             font_size='16sp',
@@ -172,7 +172,7 @@ class DrowsyGuardLayout(BoxLayout):
         self.start_btn.bind(on_press=self.start_monitoring)
         
         self.stop_btn = Button(
-            text='◼ Dừng',
+            text='Dừng',
             background_color=(0.7, 0.3, 0.3, 1),
             background_normal='',
             font_size='16sp',
@@ -237,7 +237,7 @@ class DrowsyGuardLayout(BoxLayout):
         # === HƯỚNG DẪN ===
         guide_box = BoxLayout(size_hint=(1, 0.07), padding=[15, 5])
         guide = Label(
-            text='💡 Lưu ý: Đặt camera sao cho khuôn mặt hiện rõ. Sử dụng "Hiệu chỉnh" để tối ưu độ chính xác.',
+            text='Lưu ý: Đặt camera sao cho khuôn mặt hiện rõ. Sử dụng "Hiệu chỉnh" để tối ưu độ chính xác.',
             font_size='11sp',
             color=(0.6, 0.65, 0.7, 1),
             italic=True,
