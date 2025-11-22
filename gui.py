@@ -492,7 +492,7 @@ class DrowsyGuardLayout(BoxLayout):
             color=(0.5, 0.8, 1, 1)
         )
         ear_slider = Slider(min=0.15, max=0.35, value=current_ear, step=0.01)
-        ear_slider.bind(value=lambda s, v: ear_label.setter('text')(ear_label, f"▼ Ngưỡng EAR (Phát hiện mắt nhắm): {v:.2f}"))
+        ear_slider.bind(value=lambda s, v: ear_label.setter('text')(ear_label, f"Ngưỡng EAR (Phát hiện mắt nhắm): {v:.2f}"))
         
         ear_hint = Label(
             text='Giảm giá trị = Nhạy hơn | Tăng giá trị = Ít nhạy hơn',
@@ -514,7 +514,7 @@ class DrowsyGuardLayout(BoxLayout):
             color=(1, 0.75, 0.4, 1)
         )
         mar_slider = Slider(min=0.4, max=0.8, value=current_mar, step=0.01)
-        mar_slider.bind(value=lambda s, v: mar_label.setter('text')(mar_label, f"▼ Ngưỡng MAR (Phát hiện ngáp): {v:.2f}"))
+        mar_slider.bind(value=lambda s, v: mar_label.setter('text')(mar_label, f"Ngưỡng MAR (Phát hiện ngáp): {v:.2f}"))
         
         mar_hint = Label(
             text='Giảm giá trị = Nhạy hơn | Tăng giá trị = Ít nhạy hơn',
