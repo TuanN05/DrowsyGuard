@@ -21,6 +21,9 @@ class DrowsinessDetector:
     # Ngưỡng số lần ngáp để cảnh báo nghiêm trọng
     YAWN_COUNT_THRESHOLD = 4  # Phải ngáp 4 lần mới cảnh báo
     
+    # Thời gian đếm ngược sau mỗi lần ngáp (20 giây = 600 frames @ 30 FPS)
+    YAWN_RESET_FRAMES = 600  # 20 giây
+    
     # Điểm buồn ngủ tích lũy
     DROWSINESS_SCORE_THRESHOLD = 200  # Tăng ngưỡng để ít nhạy hơn
     
@@ -32,6 +35,7 @@ class DrowsinessDetector:
         self.total_yawns = 0
         self.alert_active = False
         self.pause_scoring_frames = -90  # Số frame còn lại cần tạm dừng tính điểm
+        self.frames_since_last_yawn = 0  # Đếm frame từ lần ngáp cuối cùng
     
     def reset(self):
         """Reset tất cả các biến đếm"""
@@ -42,6 +46,7 @@ class DrowsinessDetector:
         self.alert_active = False
         # đặt thời gian tạm dừng, cứ 30 frame là 1 giây
         self.pause_scoring_frames = 90
+        self.frames_since_last_yawn = 0
     
     def update(self, ear_value, mar_value):
         """
@@ -101,8 +106,18 @@ class DrowsinessDetector:
                 if self.yawn_frames == self.YAWN_FRAMES_THRESHOLD:
                     self.total_yawns += 1
                     self.drowsiness_score += 3  # Mỗi lần ngáp +3 điểm (ít hơn)
+                    self.frames_since_last_yawn = 0  # Reset bộ đếm thời gian
         else:
             self.yawn_frames = 0
+        
+        # Đếm frame từ lần ngáp cuối cùng
+        if self.total_yawns > 0:
+            self.frames_since_last_yawn += 1
+            
+            # Nếu quá 20 giây không ngáp mới, reset về 0
+            if self.frames_since_last_yawn >= self.YAWN_RESET_FRAMES:
+                self.total_yawns = 0
+                self.frames_since_last_yawn = 0
         
         # Xác định mức độ cảnh báo
         alert_level = 'SAFE'
