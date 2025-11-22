@@ -166,7 +166,7 @@ class DrowsyGuardLayout(BoxLayout):
             text='▶ Bắt đầu',
             background_color=(0.25, 0.6, 0.25, 1),
             background_normal='',
-            font_size='14sp',
+            font_size='16sp',
             bold=True
         )
         self.start_btn.bind(on_press=self.start_monitoring)
@@ -175,7 +175,7 @@ class DrowsyGuardLayout(BoxLayout):
             text='◼ Dừng',
             background_color=(0.7, 0.3, 0.3, 1),
             background_normal='',
-            font_size='14sp',
+            font_size='16sp',
             bold=True,
             disabled=True
         )
@@ -196,7 +196,7 @@ class DrowsyGuardLayout(BoxLayout):
             text='Mặc định',
             background_color=(0.45, 0.45, 0.5, 1),
             background_normal='',
-            font_size='13sp',
+            font_size='15sp',
             bold=True
         )
         self.default_btn.bind(on_press=self.reset_defaults)
@@ -205,7 +205,7 @@ class DrowsyGuardLayout(BoxLayout):
             text='Tùy chỉnh',
             background_color=(0.45, 0.45, 0.5, 1),
             background_normal='',
-            font_size='13sp',
+            font_size='15sp',
             bold=True
         )
         self.sensitivity_btn.bind(on_press=self.open_sensitivity_popup)
@@ -221,7 +221,7 @@ class DrowsyGuardLayout(BoxLayout):
             text='Hiệu chỉnh',
             background_color=(0.45, 0.45, 0.5, 1),
             background_normal='',
-            font_size='13sp',
+            font_size='15sp',
             bold=True
         )
         self.calibrate_btn.bind(on_press=self.start_calibration)
