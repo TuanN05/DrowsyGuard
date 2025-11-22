@@ -14,7 +14,13 @@ class FaceDetector:
     # Chỉ số landmarks của các phần trên khuôn mặt
     LEFT_EYE_INDICES = [362, 385, 387, 263, 373, 380]
     RIGHT_EYE_INDICES = [33, 160, 158, 133, 153, 144]
-    MOUTH_INDICES = [61, 291, 0, 17, 78, 308, 95, 88]
+    
+    # Landmarks miệng cho MAR (8 điểm chính):
+    # [0] góc trong trái (78), [1] góc trong phải (308)
+    # [2] trên giữa (13), [3] dưới giữa (14) 
+    # [4] trên trái phụ (81), [5] dưới trái phụ (178)
+    # [6] trên phải phụ (311), [7] dưới phải phụ (402)
+    MOUTH_INDICES = [78, 308, 13, 14, 81, 178, 311, 402]
     
     def __init__(self, max_num_faces=1, min_detection_confidence=0.5, min_tracking_confidence=0.5):
         """

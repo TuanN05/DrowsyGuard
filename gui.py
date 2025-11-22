@@ -372,7 +372,7 @@ class DrowsyGuardLayout(BoxLayout):
                     size=lambda *args: setattr(content.bg, 'size', content.size))
         
         warning_label = Label(
-            text='⚠',
+            text='!',
             font_size='80sp',
             color=(1, 0.9, 0, 1),
             size_hint=(1, 0.2)
@@ -395,7 +395,7 @@ class DrowsyGuardLayout(BoxLayout):
         )
         
         action_label = Label(
-            text='━━━━━━━━━━━━━━━━━━\nVui lòng nghỉ ngơi ngay!\n━━━━━━━━━━━━━━━━━━\nBấm XÁC NHẬN khi đã tỉnh táo',
+            text='\n===Vui lòng nghỉ ngơi ngay!===\nBấm XÁC NHẬN khi đã tỉnh táo',
             font_size='16sp',
             color=(1, 0.95, 0.7, 1),
             halign='center',
@@ -404,7 +404,7 @@ class DrowsyGuardLayout(BoxLayout):
         action_label.bind(size=action_label.setter('text_size'))
         
         confirm_btn = Button(
-            text='✓ XÁC NHẬN - Tôi đã tỉnh táo',
+            text='XÁC NHẬN - Tôi đã tỉnh táo',
             font_size='18sp',
             bold=True,
             background_color=(0.2, 0.6, 0.2, 1),
@@ -419,7 +419,7 @@ class DrowsyGuardLayout(BoxLayout):
         content.add_widget(confirm_btn)
 
         self.alert_popup = Popup(
-            title='═══════════════════════════',
+            title='=== CẢNH BÁO BUỒN NGỦ ===',
             content=content,
             size_hint=(0.85, 0.65),
             auto_dismiss=False,
